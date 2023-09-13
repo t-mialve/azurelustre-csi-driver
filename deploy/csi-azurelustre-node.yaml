@@ -116,7 +116,7 @@ spec:
             - name: AZURELUSTRE_CSI_INSTALL_LUSTRE_CLIENT
               value: "yes"
             - name: LUSTRE_VERSION
-              value: "2.15.1"
+              value: "2.15.3"
             - name: KUBE_NODE_NAME
               valueFrom:
                 fieldRef:

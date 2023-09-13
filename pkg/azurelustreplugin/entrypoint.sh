@@ -65,10 +65,10 @@ function add_net_interfaces() {
 installClientPackages=${AZURELUSTRE_CSI_INSTALL_LUSTRE_CLIENT:-yes}
 echo "installClientPackages: ${installClientPackages}"
 
-requiredLustreVersion=${LUSTRE_VERSION:-"2.15.1"}
+requiredLustreVersion=${LUSTRE_VERSION:-"2.15.3"}
 echo "requiredLustreVersion: ${requiredLustreVersion}"
 
-pkgVersion="${requiredLustreVersion}-29-gbae0abe"
+pkgVersion="${requiredLustreVersion}-43-gd7e07df"
 echo "pkgVersion: ${pkgVersion}"
 
 pkgName="amlfs-lustre-client-${pkgVersion}"
@@ -103,11 +103,9 @@ if [[ "${installClientPackages}" == "yes" ]]; then
 
   echo "$(date -u) Installing Lustre client packages for OS=${osReleaseCodeName}, kernel=${kernelVersion} "
 
-  if [ ! -f /etc/apt/sources.list.d/amlfs.list ]; then
-    curl -sL https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor | tee /etc/apt/trusted.gpg.d/microsoft.gpg > /dev/null
-    echo "deb [arch=amd64] https://packages.microsoft.com/repos/amlfs-${osReleaseCodeName}/ ${osReleaseCodeName} main" | tee /etc/apt/sources.list.d/amlfs.list
-    apt-get update
-  fi
+  curl -sL https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor | tee /etc/apt/trusted.gpg.d/microsoft.gpg > /dev/null
+  echo "deb [arch=amd64] https://packages.microsoft.com/repos/amlfs-${osReleaseCodeName}-test/ ${osReleaseCodeName} main" | tee /etc/apt/sources.list.d/amlfs.list
+  apt-get update
   
   echo "$(date -u) Installing Lustre client modules: ${pkgName}=${kernelVersion}"
 

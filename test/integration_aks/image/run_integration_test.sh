@@ -43,7 +43,7 @@ echo "$(date -u) OS release code name is ${osReleaseCodeName}, kernel version is
 echo "$(date -u) Installing Lustre client packages."
 
 curl -sL https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor | tee /etc/apt/trusted.gpg.d/microsoft.gpg > /dev/null
-echo "deb [arch=amd64] https://packages.microsoft.com/repos/amlfs-${osReleaseCodeName}/ ${osReleaseCodeName} main" | tee /etc/apt/sources.list.d/amlfs.list
+echo "deb [arch=amd64] https://packages.microsoft.com/repos/amlfs-${osReleaseCodeName}-test/ ${osReleaseCodeName} main" | tee /etc/apt/sources.list.d/amlfs.list
 apt-get update
 
 DEBIAN_FRONTEND=noninteractive apt install -y --no-install-recommends -o DPkg::options::="--force-confdef" -o DPkg::options::="--force-confold" ${pkgName}=${kernelVersion}

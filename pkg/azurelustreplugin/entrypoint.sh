@@ -20,7 +20,7 @@
 #
 
 set -o xtrace
-set -o errexit
+# set -o errexit
 set -o pipefail
 set -o nounset
 
@@ -165,6 +165,13 @@ if [[ "${installClientPackages}" == "yes" ]]; then
   echo "$(date -u) Enabled Lustre client kernel modules."
 
 fi
+
+dmesg
+
+echo "Sleeping pod to allow for debugging"
+sleep 600
+
+# Now exec into the pod and grab dmesg output
 
 echo "$(date -u) Entering Lustre CSI driver"
 

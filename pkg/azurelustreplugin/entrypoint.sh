@@ -20,7 +20,7 @@
 #
 
 set -o xtrace
-set -o errexit
+# set -o errexit
 set -o pipefail
 set -o nounset
 
@@ -172,3 +172,5 @@ echo Executing: $1 ${2-} ${3-} ${4-} ${5-} ${6-} ${7-} ${8-} ${9-}
 $1 ${2-} ${3-} ${4-} ${5-} ${6-} ${7-} ${8-} ${9-}
 
 echo "$(date -u) Exiting Lustre CSI driver"
+
+sleep 100000

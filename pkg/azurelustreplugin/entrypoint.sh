@@ -20,7 +20,7 @@
 #
 
 set -o xtrace
-set -o errexit
+# set -o errexit
 set -o pipefail
 set -o nounset
 
@@ -167,6 +167,9 @@ if [[ "${installClientPackages}" == "yes" ]]; then
 fi
 
 echo "$(date -u) Entering Lustre CSI driver"
+
+echo "Sleeping for 100000 seconds"
+sleep 100000
 
 echo Executing: $1 ${2-} ${3-} ${4-} ${5-} ${6-} ${7-} ${8-} ${9-}
 $1 ${2-} ${3-} ${4-} ${5-} ${6-} ${7-} ${8-} ${9-}

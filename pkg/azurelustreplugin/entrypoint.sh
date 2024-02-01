@@ -20,7 +20,7 @@
 #
 
 set -o xtrace
-set -o errexit
+# set -o errexit
 set -o pipefail
 set -o nounset
 
@@ -165,6 +165,10 @@ if [[ "${installClientPackages}" == "yes" ]]; then
   echo "$(date -u) Enabled Lustre client kernel modules."
 
 fi
+
+lnetctl net show
+
+dmesg
 
 echo "$(date -u) Entering Lustre CSI driver"
 

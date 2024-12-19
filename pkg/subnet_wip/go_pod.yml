@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: go-test-pod
+  labels:
+    aadpodidbinding: mialve-aks-acr-identity
+spec:
+  containers:
+  - name: go-container
+    image: mcr.microsoft.com/devcontainers/go:latest
+    command: ["sleep", "360000000"]

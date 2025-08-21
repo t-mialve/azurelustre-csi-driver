@@ -111,9 +111,15 @@ if [[ "${installClientPackages}" == "yes" ]]; then
   while [[ tries -gt 0 ]]; do
     # grub issue
     # https://stackoverflow.com/questions/40748363/virtual-machine-apt-get-grub-issue/40751712
-    if ! DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends -o DPkg::options::="--force-confdef" -o DPkg::options::="--force-confold" \
-      ${pkgName}=${kernelVersion}; then
-      echo "$(date -u) Error installing Lustre client modules. Will try removing existing versions"
+    apt_output=$(DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends -o DPkg::options::="--force-confdef" -o DPkg::options::="--force-confold" \
+      ${pkgName}=${kernelVersion} 2>&1)
+    apt_exit_code=$?
+    
+    if [[ $apt_exit_code -ne 0 ]]; then
+      echo "$(date -u) Error installing Lustre client modules. Apt output:"
+      echo "$apt_output"
+
+      echo "$(date -u) Will try removing existing versions"
       # Check if lustre_rmmod is available, attempt to unload the modules if so.
       # If modules are already uninstalled, this will still pass
       if type lustre_rmmod >/dev/null 2>&1 && ! lustre_rmmod; then
@@ -132,6 +138,26 @@ if [[ "${installClientPackages}" == "yes" ]]; then
       break
     fi
   done
+
+  if echo "$apt_output" | grep -q "E: Unable to correct problems, you have held broken packages."; then
+    echo "$(date -u) Detected held broken packages error"
+    kmodPkgName="kmod-lustre-client$(uname -r)-${pkgVersion}"
+    kmod_apt_output=$(DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends --fix-broken -o DPkg::options::="--force-confdef" -o DPkg::options::="--force-confold" \
+      ${kmodPkgName} 2>&1)
+
+    if [[ $? -ne 0 ]]; then
+      echo "$(date -u) Error installing kmod package. Apt output:"
+      echo "$kmod_apt_output"
+      if echo "$apt_output" | grep -q "E: Unable to correct problems, you have held broken packages."; then
+        echo "Attempting install without libsnmp-dev"
+        apt install "lustre-client-${pkgVersion}"
+        apt download "${kmodPkgName}"
+        dpkg -i --force-depends "./${kmodPkgName}"*.deb
+      fi
+
+    fi
+
+  fi
 
   echo "$(date -u) Install success: ${install_success}, Tries left: ${tries}"
 
